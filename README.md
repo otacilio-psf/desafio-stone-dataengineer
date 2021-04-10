@@ -11,7 +11,7 @@ Visando uma arquitetura cloud agnostic, preferi utilizar o Databricks uma vez qu
 Utilizamos também do formato delta que nos permite transações ACID além de muitas outras vantagens como data upsert & Time Travel.
 Seguindo a ideia de cloud agnostic, ao invés de utilizar a ferramenta proprietária AWS Athena, que se baseia nas tecnologias open source (Hive e Presto), utilizei o Hive para o metastore presente no environment do Databricks e o próprio Spark como engine de processamento. Porem ainda é possivel utilizar um external metastore como o AWS Glue ou uma banco MySQL estanciado de diversas formas (PAAS ou container).
 
-![alt text](https://raw.githubusercontent.com/otacilio-psf/desafio-stone-dataengineer/main/architecture.jpg?token=AP5DIO3PMIFUH4LI3JRXIUTAOIELW "Arquitetura")
+![alt text](https://raw.githubusercontent.com/otacilio-psf/desafio-stone-dataengineer/7ac481fd8040bf0920f67991f3f9bf827eab3aac/architecture.jpg?token=AP5DIO2HTWNNG3LCYF7C4S3AOIFES "Arquitetura")
 
 ### Etapas
 #### 1)
