@@ -9,12 +9,6 @@ import json
 
 # COMMAND ----------
 
-df_1 = spark.range(100)
-df_1 = df_1.withColumn('id', lit('Teste'))
-df_1.d
-
-# COMMAND ----------
-
 ## parameters
 # aws s3 parameters
 access_key = dbutils.secrets.get(scope = "aws", key = "aws-access-key")
