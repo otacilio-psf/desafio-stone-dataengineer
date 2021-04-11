@@ -9,18 +9,14 @@
 ### Arquitetura
 Visando uma arquitetura cloud agnostic, preferi utilizar o Databricks uma vez que o mesmo está presente nos principais players (AWS, Azure e GCP) e proporciona um ambiente preparado para SPARK, robusto e escalável.
 Utilizamos também do formato delta que nos permite transações ACID além de muitas outras vantagens como data upsert & Time Travel.
-Seguindo a ideia de cloud agnostic, ao invés de utilizar a ferramenta proprietária AWS Athena, que se baseia nas tecnologias open source (Hive e Presto), utilizei o Hive para o metastore presente no environment do Databricks e o próprio Spark como engine de processamento. Porem ainda é possivel utilizar um external metastore como o AWS Glue ou uma banco MySQL estanciado de diversas formas (PAAS ou container).
+Seguindo a ideia de cloud agnostic, ao invés de utilizar a ferramenta proprietária AWS Athena, que se baseia nas tecnologias open source (Hive e Presto), utilizei o Hive para o metastore presente no environment do Databricks e o próprio SPARK como engine de processamento. Porem ainda é possivel utilizar um external metastore como o AWS Glue ou uma banco MySQL estanciado de diversas formas (PAAS ou container).
 
 ![alt text](https://github.com/otacilio-psf/desafio-stone-dataengineer/blob/main/architecture.jpg "Arquitetura")
 
 ### Etapas
-#### 1)
-Para coletar os dados das APIs, utilizei o python para realizar as conexões persistir na landing
-#### 2)
-Uma vez os dados disponiveis na landing, utilizando SPARK movimentei o dados através das camadas bronze, silver e gold, tratando e agregando os dados de acordo com as necessidades de negócio
-#### 3)
-Criado a tabela no hive metastore para disponibilizar acesso SQL like para os cientistas consumirem
-#### 4)
-Presente na etapa 2
+1. Para coletar os dados das APIs, utilizei python para realizar as conexões persistir na landing
+2. Uma vez os dados disponiveis na landing, utilizando SPARK, movimentei o dados através das camadas bronze, silver e gold, transformando e agregando os dados de acordo com as necessidades de negócio
+3. Com os dados disponiveis no datalake, criei as tabela silver no hive metastore para disponibilizar acesso SQL like para os cientistas consumirem
+4. Presente na etapa 2
 
 Qualquer arquivo pode ser carregados no Databricks
