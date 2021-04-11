@@ -1,6 +1,6 @@
 # Databricks notebook source
 # import necessaries libs
-from pyspark.sql.functions import col, lit, current_date, to_date, sha1, udf, when, month, year, concat
+from pyspark.sql.functions import col, lit, current_date, to_date, sha2, udf, when, month, year, concat
 from pyspark.sql.types     import StringType, DoubleType
 from uuid                  import uuid4
 import requests
@@ -9,11 +9,17 @@ import json
 
 # COMMAND ----------
 
+df_1 = spark.range(100)
+df_1 = df_1.withColumn('id', lit('Teste'))
+df_1.d
+
+# COMMAND ----------
+
 ## parameters
 # aws s3 parameters
-#access_key = dbutils.secrets.get(scope = "aws", key = "aws-access-key")
-#secret_key = dbutils.secrets.get(scope = "aws", key = "aws-secret-key")
-#encoded_secret_key = secret_key.replace("/", "%2F")
+access_key = dbutils.secrets.get(scope = "aws", key = "aws-access-key")
+secret_key = dbutils.secrets.get(scope = "aws", key = "aws-secret-key")
+encoded_secret_key = secret_key.replace("/", "%2F")
 aws_bucket_name = "stonedatalake"
 mount_name = "stonedatalake"
 
@@ -26,7 +32,7 @@ gold_path = lambda table: f"dbfs:/mnt/{mount_name}/gold/{table}"
 # COMMAND ----------
 
 # mount s3 bucket
-#dbutils.fs.mount(f"s3a://{access_key}:{encoded_secret_key}@{aws_bucket_name}", f"/mnt/{mount_name}")
+dbutils.fs.mount(f"s3a://{access_key}:{encoded_secret_key}@{aws_bucket_name}", f"/mnt/{mount_name}")
 
 # COMMAND ----------
 
@@ -71,7 +77,7 @@ class Auxiliary_functions():
                 
         except:
         # Write Data Frame
-            # This command should be executed in the first execution
+        # This command should be executed in the first execution
             if partition_table:
                 df.write.mode("overwrite").format("delta").partitionBy(partition_table).save(path)
             else:
@@ -152,8 +158,8 @@ class Divida_ativa():
         # reading
         df_divida_ativa_raw = spark.read.csv(self._landing_path, sep=";", header=True, encoding="ISO-8859-1")
         # hashing sensite data
-        df_divida_ativa_raw = df_divida_ativa_raw.withColumn('hash_NOME_DEVEDOR', sha1(col('NOME_DEVEDOR')))\
-                                                 .withColumn('hash_NUMERO_INSCRICAO', sha1(col('NUMERO_INSCRICAO')))
+        df_divida_ativa_raw = df_divida_ativa_raw.withColumn('hash_NOME_DEVEDOR', sha2(col('NOME_DEVEDOR'), 256))\
+                                                 .withColumn('hash_NUMERO_INSCRICAO', sha2(col('NUMERO_INSCRICAO'), 256))
         # drop sensitive data
         df_divida_ativa_raw = df_divida_ativa_raw.drop(col('CPF_CNPJ'))\
                                                  .drop(col('NOME_DEVEDOR'))\
@@ -377,7 +383,7 @@ af.create_hive_table('stone_silver',
 spark.sql("""
 SELECT *
 FROM stone_silver.divida_ativa
-LIMIT 100
+LIMIT 5
 """).display()
 
 # COMMAND ----------
@@ -385,7 +391,7 @@ LIMIT 100
 spark.sql("""
 SELECT *
 FROM stone_silver.credit_condition_corporate
-LIMIT 100
+LIMIT 5
 """).display()
 
 # COMMAND ----------
@@ -393,5 +399,5 @@ LIMIT 100
 spark.sql("""
 SELECT *
 FROM stone_silver.credit_condition_mortgage
-LIMIT 100
+LIMIT 5
 """).display()
