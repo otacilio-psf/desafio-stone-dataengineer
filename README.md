@@ -19,4 +19,4 @@ Seguindo a ideia de cloud agnostic, ao invés de utilizar a ferramenta propriet�
 3. Com os dados disponiveis no datalake, criei as tabela silver no hive metastore para disponibilizar acesso SQL like para os cientistas consumirem
 4. Presente na etapa 2
 
-Qualquer arquivo pode ser carregados no Databricks
+Para utilizar no Databricks basta importar qualquer um dos arquivos com o código (.ipynb ou .py)
